@@ -17,14 +17,12 @@ abstract class AbstractModel
         return $db->queryOne('SELECT * FROM ' .static::$table. ' WHERE id = ' . $id, static::$class);
     }
 
-    public function insertOne($data)
+    public function insertOne()
     {
-        $keys = array_keys($data);
-        $values = array_values($data);
-        $field = '`'.implode('`, `', $keys).'`';
-        $value = "'".implode("', '", $values)."'";
-
-        $sql = "INSERT INTO ".static::$table." ($field) VALUES ($value)";
+        $sql = "INSERT INTO " .static::$table. " (title, text)
+            VALUES (
+             '" . $this->title . "',
+             '" . $this->content . "')";
 
         $db = new DB;
         return $db->insert($sql);
