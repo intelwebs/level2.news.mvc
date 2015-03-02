@@ -9,14 +9,10 @@ class View implements Iterator
         $this->position = 0;
     }
 
-    // С помощью метода assign передаем данные, которые мы хотим отобразить
-    // Эти данные будут записаны во внутренний массив
-    public function assign($name, $value){
-        $this->data[$name] = $value;
-    }
 
     // Для того, чтобы сработала в NewsController.php строка $view->items = $items;
     public function __set($k, $v){
+        // В $this->data попадет массив array(1){ ["items"]=> array(5) { [0]=> object(News)#3 (4) { ["id"]=> "1" ["title"]=> "Заголовок новости"...
         $this->data[$k] = $v;
     }
 
@@ -27,8 +23,8 @@ class View implements Iterator
         foreach($this->data as $key => $val){
             // нам бы хотелось создать такую переменную с таким же именем как $key
             // для этого используем $$
+            // Таким образом мы получили $items = массив данных;
             $$key = $val;
-
         }
 
         include __DIR__.'/../views/'.$template;
@@ -40,26 +36,26 @@ class View implements Iterator
     /**
     ЧТОБЫ ПО ОБЪЕКТУ МОЖНО БЫЛО ПРОХОДИТЬ ИСПОЛЬЗУЕМ СТАНДАРТНЫЕ ФУНКЦИИ Iterator
      */
+
+    // в начало
     public function rewind() {
         $this->position = 0;
     }
 
+    // Настояще значение указателя
     public function current() {
         return $this->data[$this->position];
     }
-
+    // ключ
     public function key() {
         return $this->position;
     }
-
+    // следующее значение указателя
     public function next() {
         ++$this->position;
     }
-
+    // верное значение
     public function valid() {
         return isset($this->data[$this->position]);
     }
 }
-
-
-

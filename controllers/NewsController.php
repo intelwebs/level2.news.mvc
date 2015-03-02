@@ -19,4 +19,34 @@ class NewsController
         $view->display('news/one.php');
     }
 
+
+    public function actionAdd()
+    {
+        if(isset($_POST['save'])) {
+            $err = false;
+            if (empty($_POST['title'])) {
+                $err = true;
+            }
+            if (empty($_POST['content'])) {
+                $err = true;
+            }
+
+            if ($err == false) {
+                $data = [];
+
+                $article = new News;
+                $data['title'] = $_POST['title'];
+                $data['content'] = $_POST['content'];
+
+                $article->insertOne($data);
+
+                header("Location: /");
+                die;
+            }
+
+        }else{
+            $view = new View();
+            $view->display('news/add.php');
+        }
+    }
 }

@@ -2,4 +2,4 @@
     <a href="?act=One&id=<?php echo $item->id;?>"><?php echo $item->title; ?></a><br />
 <?php endforeach; ?>
 
-<p><a href="?ctrl=Admin&act=Add">Добавить новость</a></p>
+<p><a href="?act=Add">Добавить новость</a></p>

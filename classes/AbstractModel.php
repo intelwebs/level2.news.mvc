@@ -17,7 +17,7 @@ abstract class AbstractModel
         return $db->queryOne('SELECT * FROM ' .static::$table. ' WHERE id = ' . $id, static::$class);
     }
 
-    public static function insertOne($data)
+    public function insertOne($data)
     {
         $keys = array_keys($data);
         $values = array_values($data);
