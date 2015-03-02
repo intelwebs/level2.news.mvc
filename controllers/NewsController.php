@@ -32,7 +32,6 @@ class NewsController
             }
 
             if ($err == false) {
-                $data = [];
                 $data['title'] = $_POST['title'];
                 $data['content'] = $_POST['content'];
 
