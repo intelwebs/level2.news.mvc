@@ -33,11 +33,10 @@ class NewsController
 
             if ($err == false) {
                 $data = [];
-
-                $article = new News;
                 $data['title'] = $_POST['title'];
                 $data['content'] = $_POST['content'];
 
+                $article = new News;
                 $article->insertOne($data);
 
                 header("Location: /");
