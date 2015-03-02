@@ -1,3 +1,3 @@
-<h1><?php echo $items->title; ?></h1>
-<div><?php echo $items->content; ?></div>
+<h1><?php echo $item->title; ?></h1>
+<div><?php echo $item->content; ?></div>
 <p><a href="/">к списку</a></p>

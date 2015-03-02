@@ -5,13 +5,18 @@ class NewsController
     public function actionAll()
     {
         $items = News::getAll();
-        return $items;
+        $view = new View();
+        $view->items = $items;
+        $view->display('news/all.php');
     }
 
     public function actionOne()
     {
         $id = $_GET['id'];
         $item = News::getOne($id);
-        return $item;
+        $view = new View();
+        $view->item = $item;
+        $view->display('news/one.php');
     }
+
 }

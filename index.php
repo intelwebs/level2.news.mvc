@@ -14,8 +14,3 @@ $controller = new $controllerClassName;
 $method = 'action' . $act;
 $items = $controller->$method();
 
-$admin = new AdminController();
-$admin->actionAdd();
-
-$view = new View;
-$view->display($items);
