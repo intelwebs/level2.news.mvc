@@ -5,10 +5,13 @@ class NewsController
     public function actionAll()
     {
         $items = News::findAll();
+
         $view = new View();
         $view->items = $items;
         $view->display('news/all.php');
     }
+
+
 
     public function actionOne()
     {
@@ -22,9 +25,10 @@ class NewsController
     }
 
 
+
     public function actionAdd()
     {
-        $this->getView();
+        $this->getView('news/add.php');
 
         if(isset($_POST['save'])) {
             $err = false;
@@ -39,13 +43,41 @@ class NewsController
                 $article = new News;
                 $article->title = $_POST['title'];
                 $article->content = $_POST['content'];
-                $article->insert();
+                //$article->insert();
 
-                header("Location: /");
-                die;
+                // Выводим содержание только что добавленной новости
+                $item = News::findOneByPk($article->insert());
+                $view = new View();
+                $view->item = $item;
+                $view->display('news/one.php');
+
             }
         }
     }
+
+
+
+    public function actionUpdate($id)
+    {
+        $id = $_GET['id'];
+
+        $item = News::findOneByPk($id);
+        $view = new View();
+        $view->item = $item;
+        $view->display('news/update.php');
+
+        if(isset($_POST['save']))
+        {
+            $article = new News;
+            $article->date = $_POST['date'];
+            $article->title = $_POST['title'];
+            $article->content = $_POST['content'];
+            $article->update($id);
+            header('Location: /');
+            exit;
+        }
+    }
+
 
 
     public function actionDel($id)
@@ -56,9 +88,8 @@ class NewsController
             $article = new News;
             $article->delete($id);
 
-            header("Location: /");
-            echo "Я ТУТ!";
-            die;
+            header('Location: /');
+            exit;
         }else{
             echo "Нет такого id";
         }
@@ -66,11 +97,10 @@ class NewsController
 
 
 
-
-    public function getView()
+    public function getView($path)
     {
         $view = new View();
-        $view->display('news/add.php');
+        $view->display($path);
     }
 }
 

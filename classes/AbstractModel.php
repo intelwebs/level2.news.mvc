@@ -5,6 +5,7 @@ abstract class AbstractModel
     protected static $table;
     protected $data = [];
 
+
     public function __set($k, $v)
     {
         $this->data[$k] = $v;
@@ -16,6 +17,7 @@ abstract class AbstractModel
     }
 
 
+
     public static function findAll()
     {
         $class = get_called_class();
@@ -24,6 +26,8 @@ abstract class AbstractModel
         $db->setClassName($class);
         return $db->query($sql);
     }
+
+
 
     public static function findOneByPk($id)
     {
@@ -34,10 +38,11 @@ abstract class AbstractModel
         return $db->query($sql, [':id' => $id])[0];
     }
 
-    // Набираем данные из форм
-    public function fill($data = [])
-    {
 
+    public static function findByColumn($column, $value)
+    {
+        // Используем запрос select * from `table` where `col1` like "%$query_string%"
+        return true;
     }
 
 
@@ -65,15 +70,28 @@ abstract class AbstractModel
 
         $db = new DB();
         $db->execute($sql, $data);
-        echo $db->lastId();
+
+        $last_id = $db->lastId();
+        return $last_id;
+    }
+
+
+
+// Обновляет, но есть какая-то ошибка: остсутствует один агргумент
+    public function update($id)
+    {
+        $date = $this->date;
+        $title = $this->title;
+        $content = $this->content;
+
+        $sql = "UPDATE " . static::$table . " SET date = '".$date."' , title = '".$title."' , content = '".$content."' WHERE id=:id";
+
+        $db = new DB();
+        $db->query($sql, [':id' => $id]);
         die;
     }
 
 
-    public function update($id)
-    {
-        return true;
-    }
 
 
     public function delete($id)
@@ -84,50 +102,4 @@ abstract class AbstractModel
     }
 
 
-
-
-//4. Напишите метод ->update(), который будет обновлять данные в уже существующей записи.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
-//    protected static $table;
-//    protected static $class;
-//
-//    public static function getAll()
-//    {
-//        $db = new DB;
-//        return $db->queryAll('SELECT * FROM ' . static::$table, static::$class);
-//    }
-//
-//    public static function getOne($id)
-//    {
-//        $db = new DB;
-//        return $db->queryOne('SELECT * FROM ' .static::$table. ' WHERE id = ' . $id, static::$class);
-//    }
-//
-//    public function insertOne()
-//    {
-//        $sql = "INSERT INTO " .static::$table. " (title, text)
-//            VALUES (
-//             '" . $this->title . "',
-//             '" . $this->content . "')";
-//
-//        $db = new DB;
-//        return $db->insert($sql);
-//    }

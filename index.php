@@ -1,5 +1,6 @@
 <?php
 error_reporting(E_ALL);
+ob_start();
 
 require_once __DIR__ . '/autoload.php';
 
