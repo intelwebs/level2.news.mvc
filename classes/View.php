@@ -29,38 +29,3 @@ class View implements Iterator
 
         include __DIR__.'/../views/'.$template;
     }
-
-
-
-
-    /**
-    ЧТОБЫ ПО ОБЪЕКТУ МОЖНО БЫЛО ПРОХОДИТЬ ИСПОЛЬЗУЕМ СТАНДАРТНЫЕ ФУНКЦИИ Iterator
-    Метод current() возвращает текущий элемент
-    Метод next() перемещает указатель на следующий элемент
-    Метод key() возвращает индекс текущего элемента
-    Метод valid() проверяет, существует ли текущий элемент или нет
-    Метод rewind() переводит указатель текущего элемента на первый
-     */
-
-    // в начало
-    public function rewind() {
-        $this->position = 0;
-    }
-
-    // Настояще значение указателя
-    public function current() {
-        return $this->data[$this->position];
-    }
-    // ключ
-    public function key() {
-        return $this->position;
-    }
-    // следующее значение указателя
-    public function next() {
-        ++$this->position;
-    }
-    // верное значение
-    public function valid() {
-        return isset($this->data[$this->position]);
-    }
-}
