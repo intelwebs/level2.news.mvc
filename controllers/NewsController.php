@@ -53,8 +53,11 @@ class NewsController
         if(isset($_GET['id']))
         {
             $id = $_GET['id'];
-            News::delete($id);
+            $article = new News;
+            $article->delete($id);
+
             header("Location: /");
+            echo "Я ТУТ!";
             die;
         }else{
             echo "Нет такого id";
