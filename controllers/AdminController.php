@@ -27,7 +27,6 @@ class AdminController
                 $view = new View();
                 $view->item = $item;
                 $view->display('news/one.php');
-
             }
         }
     }
