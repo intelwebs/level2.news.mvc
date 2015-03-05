@@ -3,29 +3,108 @@
 abstract class AbstractModel
 {
     protected static $table;
-    protected static $class;
+    protected $data = [];
 
-    public static function getAll()
+
+    public function __set($k, $v)
     {
-        $db = new DB;
-        return $db->queryAll('SELECT * FROM ' . static::$table, static::$class);
+        $this->data[$k] = $v;
     }
 
-    public static function getOne($id)
+    public function __get($k)
     {
-        $db = new DB;
-        return $db->queryOne('SELECT * FROM ' .static::$table. ' WHERE id = ' . $id, static::$class);
+        return $this->data[$k];
     }
 
-    public function insertOne()
-    {
-        $sql = "INSERT INTO " .static::$table. " (title, text)
-            VALUES (
-             '" . $this->title . "',
-             '" . $this->content . "')";
 
-        $db = new DB;
-        return $db->insert($sql);
+
+    public static function findAll()
+    {
+        $class = get_called_class();
+        $sql = 'SELECT * FROM ' . static::$table;
+        $db = new DB();
+        $db->setClassName($class);
+        return $db->query($sql);
     }
+
+
+
+    public static function findOneByPk($id)
+    {
+        $class = get_called_class();
+        $sql = 'SELECT * FROM ' . static::$table . ' WHERE id=:id';
+        $db = new DB();
+        $db->setClassName($class);
+        return $db->query($sql, [':id' => $id])[0];
+    }
+
+
+    public static function findByColumn($column, $value)
+    {
+        $class = get_called_class();
+        $sql = "SELECT * FROM " . static::$table . " WHERE " . $column . " LIKE '%".$value."%'";
+        $db = new DB();
+        $db->setClassName($class);
+        return $db->query($sql);
+
+        // Проверка: print_r(News::findByColumn('title', 'сюжет'));
+    }
+
+
+    public function insert()
+    {
+        // Получаем список свойств модели:
+        $cols = array_keys($this->data);
+        $data = [];
+
+        // Собираем все, чтобы было в вид ':title'
+        foreach($cols as $col){
+            $data[':' . $col] = $this->data[$col];
+        }
+
+        $sql = 'INSERT INTO ' . static::$table . '
+        (' . implode(', ', $cols) . ')
+        VALUES
+        (' . implode(', ', array_keys($data)) . ')
+        ';
+
+        // У нас есть $this->data
+        // Он выглядит ['title' => 'Foo', 'content' = > 'Bar']
+        // Для подстановки надо ['title' => 'Foo', 'content' = > 'Bar']
+        // Для этого делается массив $data
+
+        $db = new DB();
+        $db->execute($sql, $data);
+
+        $last_id = $db->lastId();
+        return $last_id;
+    }
+
+
+
+// Обновляет, но есть какая-то ошибка: остсутствует один агргумент
+    public function update($id)
+    {
+        $date = $this->date;
+        $title = $this->title;
+        $content = $this->content;
+
+        $sql = "UPDATE " . static::$table . " SET date = '".$date."' , title = '".$title."' , content = '".$content."' WHERE id=:id";
+
+        $db = new DB();
+        $db->query($sql, [':id' => $id]);
+        die;
+    }
+
+
+
+
+    public function delete($id)
+    {
+        $sql = 'DELETE FROM ' . static::$table . ' WHERE id=:id';
+        $db = new DB();
+        $db->query($sql, [':id' => $id]);
+    }
+
 
 }
