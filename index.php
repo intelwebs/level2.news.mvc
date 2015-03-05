@@ -13,5 +13,10 @@ require_once __DIR__.'/controllers/' . $controllerClassName . '.php';
 
 $controller = new $controllerClassName;
 $method = 'action' . $act;
-$items = $controller->$method();
 
+if($ctrl != 'Admin')
+{
+    $items = $controller->$method();
+}else{
+    $controller->$method();
+}
