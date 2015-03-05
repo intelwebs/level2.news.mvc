@@ -1,33 +1,38 @@
 <?php
 class DB
 {
+    private $dbh;
+    private $className = 'stdClass';
+
     public function __construct()
     {
-        @mysql_connect('localhost', 'root', '');
-        @mysql_select_db('level2_news');
-        @mysql_query("SET NAMES 'utf8'");
+        $this->dbh = new PDO('mysql:dbname=level2;host=localhost', 'root', '');
+        //@mysql_query("SET NAMES 'utf8'");
     }
 
-    public function queryAll($sql, $class = 'stdClass')
+    public function setClassName($className)
     {
-        $res = mysql_query($sql);
-        if (false === $res) {
-            return false;
-        }
-        $arr = [];
-        while ($row = mysql_fetch_object($res, $class)) {
-            $arr[] = $row;
-        }
-        return $arr;
+        $this->className = $className;
     }
 
-    public function queryOne($sql, $class = 'stdClass')
+    public function query($sql, $params=[])
     {
-        return $this->queryAll($sql, $class)[0];
+        $sth = $this->dbh->prepare($sql);
+        $sth->execute($params);
+        return $sth->fetchAll(PDO::FETCH_CLASS, $this->className);
     }
 
-    public function insert($sql)
+    public function execute($sql, $params=[])
     {
-        mysql_query($sql);
+        $sth = $this->dbh->prepare($sql);
+        return $sth->execute($params);
     }
+
+    public function lastId()
+    {
+        $last_id = $this->dbh->lastInsertId();
+        return $last_id;
+    }
+
+
 }

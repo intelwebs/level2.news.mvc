@@ -1,11 +1,13 @@
 <?php
 
+// ниже PHPDoc в PHPstorm поможет получать подсказки и автоподстановки
+/**
+ * Class NewsModel
+ * @property $id;
+ * @property $title;
+ * @property $content
+ */
 class News extends AbstractModel
 {
-    public $id;
-    public $title;
-    public $content;
-
     protected static $table = 'news';
-    protected static $class = 'News';
 }
