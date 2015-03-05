@@ -1,6 +1,6 @@
 <?php
 
-class View implements Iterator
+class View
 {
     private $position = 0;
     protected $data = [];
