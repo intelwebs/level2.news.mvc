@@ -85,7 +85,7 @@ abstract class AbstractModel
 // Обновляет, но есть какая-то ошибка: остсутствует один агргумент
     public function update()
     {
-        $date = $this->id;
+        $id = $this->id;
         $date = $this->date;
         $title = $this->title;
         $content = $this->content;
