@@ -70,21 +70,17 @@ abstract class AbstractModel
     }
 
 
-    public static function update($id)
+    public function update($id)
     {
-        $class = get_called_class();
-        $sql = 'UPDATE * FROM ' . static::$table . ' WHERE id=:id';
-        $db = new DB();
-        $db->setClassName($class);
-        return $db->query($sql, [':id' => $id])[0];
+        return true;
     }
 
 
-    public static function delete($id)
+    public function delete($id)
     {
         $sql = 'DELETE FROM ' . static::$table . ' WHERE id=:id';
         $db = new DB();
-        return $db->query($sql, [':id' => $id])[0];
+        $db->query($sql, [':id' => $id]);
     }
 
 
@@ -92,7 +88,6 @@ abstract class AbstractModel
 
 //4. Напишите метод ->update(), который будет обновлять данные в уже существующей записи.
 
-//5. Создайте метод ->delete()
 
 
 
