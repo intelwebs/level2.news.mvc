@@ -4,7 +4,7 @@ class NewsController
 {
     public function actionAll()
     {
-        $items = News::getAll();
+        $items = News::findAll();
         $view = new View();
         $view->items = $items;
         $view->display('news/all.php');
@@ -12,8 +12,10 @@ class NewsController
 
     public function actionOne()
     {
-        $id = $_GET['id'];
-        $item = News::getOne($id);
+        if(isset($_GET['id'])){
+            $id = $_GET['id'];
+        }
+        $item = News::findOneByPk($id);
         $view = new View();
         $view->item = $item;
         $view->display('news/one.php');
@@ -22,6 +24,8 @@ class NewsController
 
     public function actionAdd()
     {
+        $this->getView();
+
         if(isset($_POST['save'])) {
             $err = false;
             if (empty($_POST['title'])) {
@@ -32,19 +36,39 @@ class NewsController
             }
 
             if ($err == false) {
-
                 $article = new News;
                 $article->title = $_POST['title'];
                 $article->content = $_POST['content'];
-                $article->insertOne();
+                $article->insert();
 
                 header("Location: /");
                 die;
             }
-
-        }else{
-            $view = new View();
-            $view->display('news/add.php');
         }
     }
+
+
+    public function actionDel($id)
+    {
+        if(isset($_GET['id']))
+        {
+            $id = $_GET['id'];
+            News::delete($id);
+            header("Location: /");
+            die;
+        }else{
+            echo "Нет такого id";
+        }
+    }
+
+
+
+
+    public function getView()
+    {
+        $view = new View();
+        $view->display('news/add.php');
+    }
 }
+
+
