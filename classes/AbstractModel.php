@@ -16,6 +16,11 @@ abstract class AbstractModel
         return $this->data[$k];
     }
 
+    public function __isset($k)
+    {
+        return isset($this->data[$k]);
+    }
+
 
 
     public static function findAll()
@@ -36,18 +41,21 @@ abstract class AbstractModel
         $db = new DB();
         $db->setClassName($class);
         return $db->query($sql, [':id' => $id])[0];
+
+// Проверка
+//        if(!empty($res)){
+//            return $res[0];
+//        }
+//        return false;
     }
 
 
     public static function findByColumn($column, $value)
     {
-        $class = get_called_class();
-        $sql = "SELECT * FROM " . static::$table . " WHERE " . $column . " LIKE '%".$value."%'";
         $db = new DB();
-        $db->setClassName($class);
-        return $db->query($sql);
-
-        // Проверка: print_r(News::findByColumn('title', 'сюжет'));
+        $db->setClassName(get_called_class());
+        $sql = "SELECT * FROM " . static::$table . " WHERE " . $column . " LIKE :value";
+        return $db->query($sql, [':value' => '%'.$value.'%' ]);
     }
 
 
@@ -68,43 +76,61 @@ abstract class AbstractModel
         (' . implode(', ', array_keys($data)) . ')
         ';
 
-        // У нас есть $this->data
-        // Он выглядит ['title' => 'Foo', 'content' = > 'Bar']
-        // Для подстановки надо ['title' => 'Foo', 'content' = > 'Bar']
-        // Для этого делается массив $data
-
         $db = new DB();
         $db->execute($sql, $data);
 
-        $last_id = $db->lastId();
-        return $last_id;
+        $this->id = $db->lastId();
     }
 
 
 
-// Обновляет, но есть какая-то ошибка: остсутствует один агргумент
+
     public function update()
     {
-        $id = $this->id;
-        $date = $this->date;
-        $title = $this->title;
-        $content = $this->content;
+        $cols = [];
+        $data = [];
 
-        $sql = "UPDATE " . static::$table . " SET date = '".$date."' , title = '".$title."' , content = '".$content."' WHERE id=:id";
+        foreach($this->data as $k => $v){
+            $data[':' . $k] = $v;
+            if('id' == $k){
+                continue;
+            }
+            $cols[] = $k . '=:' . $k;
+        }
+
+        $sql = '
+            UPDATE '. static::$table .'
+            SET '. implode(',', $cols) .'
+            WHERE id=:id';
 
         $db = new DB();
-        $db->query($sql, [':id' => $id]);
-        die;
+        $db->query($sql, $data);
     }
 
 
 
-
-    public function delete($id)
+    public function delete()
     {
+        $id = $this->data['id'];
+
         $sql = 'DELETE FROM ' . static::$table . ' WHERE id=:id';
         $db = new DB();
         $db->query($sql, [':id' => $id]);
+    }
+
+
+
+
+    ////////////////////////////////////////////////////////////
+    // Единый метод save()
+    // Переписать insert и update на protected и переделать код
+    public function save()
+    {
+        if(!isset($this->id)){
+            $this->insert();
+        }else{
+            $this->update();
+        }
     }
 
 

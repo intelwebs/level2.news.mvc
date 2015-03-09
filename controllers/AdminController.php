@@ -20,20 +20,17 @@ class AdminController
                 $article = new News;
                 $article->title = $_POST['title'];
                 $article->content = $_POST['content'];
-                //$article->insert();
+                $article->insert();
 
-                // Выводим содержание только что добавленной новости
-                $item = News::findOneByPk($article->insert());
-                $view = new View();
-                $view->item = $item;
-                $view->display('news/one.php');
+                header('Location: /');
+                exit;
             }
         }
     }
 
 
 
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
         $id = $_GET['id'];
 
@@ -45,10 +42,12 @@ class AdminController
         if(isset($_POST['save']))
         {
             $article = new News;
+            $article->id = $_POST['id'];
             $article->date = $_POST['date'];
             $article->title = $_POST['title'];
             $article->content = $_POST['content'];
-            $article->update($id);
+            $article->update();
+
             header('Location: /');
             exit;
         }
@@ -56,13 +55,13 @@ class AdminController
 
 
 
-    public function actionDel($id)
+    public function actionDel()
     {
         if(isset($_GET['id']))
         {
-            $id = $_GET['id'];
             $article = new News;
-            $article->delete($id);
+            $article->id = $_GET['id'];
+            $article->delete();
 
             header('Location: /');
             exit;

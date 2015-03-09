@@ -5,6 +5,7 @@
     <input type="text" id="title" name="title" value="<?=$item->title;?>">
     <label for="content">Содержание</label>
     <textarea id="content" name="content"><?=$item->content;?></textarea>
+    <input type="hidden" name="id" value="<?= $_GET['id'];?>">
     <input type=submit value="Сохранить" name="save">
 </form>
 

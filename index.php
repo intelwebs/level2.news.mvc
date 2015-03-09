@@ -11,12 +11,15 @@ $act = isset($_GET['act']) ? $_GET['act'] : 'All';
 $controllerClassName = $ctrl . 'Controller';
 require_once __DIR__.'/controllers/' . $controllerClassName . '.php';
 
-$controller = new $controllerClassName;
-$method = 'action' . $act;
-
-if($ctrl != 'Admin')
+try
 {
+    $controller = new $controllerClassName;
+    $method = 'action' . $act;
     $items = $controller->$method();
-}else{
-    $controller->$method();
+}
+catch(E404Exception $e)
+{
+    $view = new View();
+    $view->message = $e->getMessage();
+    $view->display('404.php');
 }

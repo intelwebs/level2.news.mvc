@@ -7,7 +7,6 @@ class DB
     public function __construct()
     {
         $this->dbh = new PDO('mysql:dbname=level2;host=localhost', 'root', '');
-        //@mysql_query("SET NAMES 'utf8'");
     }
 
     public function setClassName($className)
@@ -30,8 +29,7 @@ class DB
 
     public function lastId()
     {
-        $last_id = $this->dbh->lastInsertId();
-        return $last_id;
+        return $this->dbh->lastInsertId();
     }
 
 

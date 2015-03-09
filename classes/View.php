@@ -30,6 +30,13 @@ class View
             $$key = $val;
         }
 
-        include __DIR__ . '/../views/' . $template;
+        $file = __DIR__ . '/../views/' . $template;
+
+        if (file_exists($file)){
+            include __DIR__ . '/../views/' . $template;
+        }else{
+            throw new E404Exception('Не найден файл /../views/' . $template);
+        }
+
     }
 }
