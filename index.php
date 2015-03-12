@@ -2,14 +2,17 @@
 error_reporting(E_ALL);
 ob_start();
 
+
 require_once __DIR__ . '/autoload.php';
 
-$ctrl = isset($_GET['ctrl']) ? $_GET['ctrl'] : 'News';
-$act = isset($_GET['act']) ? $_GET['act'] : 'All';
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$pathParts = explode('/', $path);
+
+$ctrl = !empty($pathParts[1]) ? ucfirst($pathParts[1]) : 'News';
+$act = !empty($pathParts[2]) ? ucfirst($pathParts[2]) : 'All';
 
 
-$controllerClassName = $ctrl . 'Controller';
-require_once __DIR__.'/controllers/' . $controllerClassName . '.php';
+$controllerClassName = 'App\\Controllers\\' . $ctrl;
 
 try
 {
@@ -21,5 +24,9 @@ catch(E404Exception $e)
 {
     $view = new View();
     $view->message = $e->getMessage();
-    $view->display('404.php');
+    $view->code = $e->getCode();
+    $view->display('error.php');
+
+    $log = new Log;
+    $log->putContents($e->getMessage(), $e->getCode());
 }

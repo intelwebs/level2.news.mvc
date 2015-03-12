@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Models;
+
 // ниже PHPDoc в PHPstorm поможет получать подсказки и автоподстановки
 /**
  * Class NewsModel
@@ -7,7 +9,7 @@
  * @property $title;
  * @property $content
  */
-class News extends AbstractModel
+class News extends \AbstractModel
 {
     protected static $table = 'news';
 }
